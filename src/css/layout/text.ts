@@ -16,13 +16,17 @@ export class TextBounds {
     }
 }
 
+// Workaround: do not break Burmese text into segments, this renders incorrectly with Zawgyi-One font.
+// (Other languages seem unaffected by skipping this step).
+const skipBreakTextSegmentation = true;
+
 export const parseTextBounds = (
     context: Context,
     value: string,
     styles: CSSParsedDeclaration,
     node: Text
 ): TextBounds[] => {
-    const textList = breakText(value, styles);
+    const textList = skipBreakTextSegmentation ? [value] : breakText(value, styles);
     const textBounds: TextBounds[] = [];
     let offset = 0;
     textList.forEach((text) => {
